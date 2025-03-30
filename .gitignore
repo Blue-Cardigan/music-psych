@@ -13,6 +13,10 @@
 # testing
 /coverage
 
+# data
+/backend/embeddings
+/backend/query_embedding.csv
+
 # next.js
 /.next/
 /out/
