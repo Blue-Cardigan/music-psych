@@ -1,5 +1,3 @@
-import SpotifyWebApi from 'spotify-web-api-node';
-
 const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID as string;
 const redirectUri = 'http://localhost:3000/api/auth/callback/spotify';
 
@@ -20,7 +18,7 @@ export const scopes = [
 
 export function generateCodeVerifier(length: number) {
   let text = '';
-  let possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   for (let i = 0; i < length; i++) {
     text += possible.charAt(Math.floor(Math.random() * possible.length));
   }

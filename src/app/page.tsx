@@ -58,15 +58,15 @@ export default function Home() {
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Participate in our study exploring the relationship between music and emotional states.
-            Your input helps advance our understanding of music's impact on mood.
+            Your input helps advance our understanding of music&apos;s impact on mood.
           </p>
         </div>
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 max-w-md mx-auto">
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">Welcome to the Study</h2>
           <p className="text-gray-600 mb-6">
-            To participate in this study, we'll need access to your Spotify account to play the recommended music.
-            This helps us ensure you're listening to the exact songs we want to study.
+            To participate in this study, we&apos;ll need access to your Spotify account to play the recommended music.
+            This helps us ensure you&apos;re listening to the exact songs we want to study.
           </p>
           <button
             onClick={handleLogin}

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SpotifyPlayer from '@/components/SpotifyPlayer';
 import { isAuthenticated } from '@/lib/auth';
+import Image from 'next/image';
 
 interface RecommendedSong {
   uri: string;
@@ -76,10 +77,12 @@ export default function ListenPage() {
         <div className="mt-8 bg-white rounded-lg shadow-lg overflow-hidden">
           <div className="p-6">
             <div className="flex items-center space-x-4">
-              <img
+              <Image
                 src={recommendedSong.albumArt}
                 alt={recommendedSong.title}
-                className="w-24 h-24 rounded-lg"
+                width={96}
+                height={96}
+                className="rounded-lg"
               />
               <div>
                 <h2 className="text-xl font-semibold text-gray-900">

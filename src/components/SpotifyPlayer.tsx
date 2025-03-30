@@ -12,7 +12,27 @@ interface SpotifyPlayerProps {
 declare global {
   interface Window {
     onSpotifyWebPlaybackSDKReady: () => void;
-    Spotify: any;
+    Spotify: {
+      Player: new (options: {
+        name: string;
+        getOAuthToken: (cb: (token: string) => void) => void;
+      }) => {
+        connect: () => Promise<boolean>;
+        disconnect: () => Promise<void>;
+        addListener: (event: string, callback: (state: PlayerState) => void) => void;
+        removeListener: (event: string) => void;
+        getCurrentState: () => Promise<PlayerState>;
+        setName: (name: string) => Promise<void>;
+        getVolume: () => Promise<number>;
+        setVolume: (volume: number) => Promise<void>;
+        pause: () => Promise<void>;
+        resume: () => Promise<void>;
+        togglePlay: () => Promise<void>;
+        seek: (position: number) => Promise<void>;
+        previousTrack: () => Promise<void>;
+        nextTrack: () => Promise<void>;
+      };
+    };
   }
 }
 
@@ -34,6 +54,24 @@ interface PlayerState {
   };
 }
 
+interface SpotifyPlayer {
+  connect: () => Promise<boolean>;
+  disconnect: () => Promise<void>;
+  addListener: (event: string, callback: (state: PlayerState) => void) => void;
+  removeListener: (event: string) => void;
+  getCurrentState: () => Promise<PlayerState>;
+  setName: (name: string) => Promise<void>;
+  getVolume: () => Promise<number>;
+  setVolume: (volume: number) => Promise<void>;
+  pause: () => Promise<void>;
+  resume: () => Promise<void>;
+  togglePlay: () => Promise<void>;
+  seek: (position: number) => Promise<void>;
+  previousTrack: () => Promise<void>;
+  nextTrack: () => Promise<void>;
+  activateElement: () => Promise<void>;
+}
+
 function formatTime(ms: number): string {
   const minutes = Math.floor(ms / 60000);
   const seconds = Math.floor((ms % 60000) / 1000);
@@ -49,7 +87,7 @@ export default function SpotifyPlayer({ songUri, onSongComplete }: SpotifyPlayer
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [showReadyCheck, setShowReadyCheck] = useState(true);
-  const playerRef = useRef<any>(null);
+  const playerRef = useRef<SpotifyPlayer | null>(null);
   const progressIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -110,7 +148,7 @@ export default function SpotifyPlayer({ songUri, onSongComplete }: SpotifyPlayer
       });
 
       // Playback status updates
-      player.addListener('player_state_changed', (state: any) => {
+      player.addListener('player_state_changed', (state: PlayerState | null) => {
         console.log('Player state changed:', state);
         if (state) {
           // Only update display if the current track matches the selected song URI
@@ -341,7 +379,7 @@ export default function SpotifyPlayer({ songUri, onSongComplete }: SpotifyPlayer
                 <p className={`text-sm ${
                   isDarkMode ? 'text-gray-300' : 'text-gray-600'
                 }`}>
-                  Once you start, the song will play without interruption.
+                  Click play when you&apos;re ready to start listening
                 </p>
                 <button
                   onClick={handleReady}
@@ -351,7 +389,7 @@ export default function SpotifyPlayer({ songUri, onSongComplete }: SpotifyPlayer
                       : 'bg-green-500 hover:bg-green-600'
                   }`}
                 >
-                  I'm Ready
+                  I&apos;m Ready
                 </button>
               </div>
             )}

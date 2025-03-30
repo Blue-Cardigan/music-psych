@@ -172,7 +172,7 @@ export default function MoodPage() {
             How are you feeling?
           </h1>
           <p className="mt-3 text-lg text-gray-500">
-            Share your current mood and we'll find the perfect song for you.
+            Share your current mood and we&apos;ll find the perfect song for you.
           </p>
         </div>
 

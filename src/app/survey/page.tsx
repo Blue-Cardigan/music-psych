@@ -4,8 +4,14 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import SurveyForm from '@/components/SurveyForm';
 
+interface RecommendedSong {
+  uri: string;
+  name: string;
+  artist: string;
+}
+
 export default function SurveyPage() {
-  const [recommendedSong, setRecommendedSong] = useState<any>(null);
+  const [recommendedSong, setRecommendedSong] = useState<RecommendedSong | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -46,9 +52,9 @@ export default function SurveyPage() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8 max-w-2xl mx-auto">
           <div className="mb-6">
             <h2 className="text-xl font-medium text-gray-900 mb-2">Song You Listened To</h2>
-            <p className="text-gray-600">{recommendedSong.title} by {recommendedSong.artist}</p>
+            <p className="text-gray-600">{recommendedSong.name} by {recommendedSong.artist}</p>
           </div>
-          <SurveyForm songId={recommendedSong.id} />
+          <SurveyForm songId={recommendedSong.uri} />
         </div>
       </div>
     </main>
