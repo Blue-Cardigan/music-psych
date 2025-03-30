@@ -2,7 +2,8 @@ import SpotifyWebApi from 'spotify-web-api-node';
 
 const clientId = process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID as string;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET as string;
-const redirectUri = 'http://localhost:3000/api/auth/callback/spotify';
+const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+const redirectUri = `${appUrl}/api/auth/callback/spotify`;
 
 if (!clientId) {
   throw new Error('NEXT_PUBLIC_SPOTIFY_CLIENT_ID is not defined');
@@ -10,10 +11,6 @@ if (!clientId) {
 
 if (!clientSecret) {
   throw new Error('SPOTIFY_CLIENT_SECRET is not defined');
-}
-
-if (!process.env.NEXT_PUBLIC_APP_URL) {
-  throw new Error('NEXT_PUBLIC_APP_URL is not defined');
 }
 
 const spotifyApi = new SpotifyWebApi({
