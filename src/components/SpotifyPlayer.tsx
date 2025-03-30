@@ -16,22 +16,8 @@ declare global {
       Player: new (options: {
         name: string;
         getOAuthToken: (cb: (token: string) => void) => void;
-      }) => {
-        connect: () => Promise<boolean>;
-        disconnect: () => Promise<void>;
-        addListener: (event: string, callback: (state: PlayerState) => void) => void;
-        removeListener: (event: string) => void;
-        getCurrentState: () => Promise<PlayerState>;
-        setName: (name: string) => Promise<void>;
-        getVolume: () => Promise<number>;
-        setVolume: (volume: number) => Promise<void>;
-        pause: () => Promise<void>;
-        resume: () => Promise<void>;
-        togglePlay: () => Promise<void>;
-        seek: (position: number) => Promise<void>;
-        previousTrack: () => Promise<void>;
-        nextTrack: () => Promise<void>;
-      };
+        volume?: number;
+      }) => SpotifyPlayer;
     };
   }
 }
@@ -47,17 +33,31 @@ interface PlayerState {
   position: number;
   duration: number;
   paused: boolean;
-  track: {
-    name: string;
-    artist: string;
-    uri: string;
+  track_window: {
+    current_track: {
+      name: string;
+      artists: Array<{ name: string }>;
+      uri: string;
+    };
   };
 }
+
+type SpotifyPlayerEventMap = {
+  initialization_error: { message: string };
+  authentication_error: { message: string };
+  account_error: { message: string };
+  playback_error: { message: string };
+  player_state_changed: PlayerState | null;
+  ready: { device_id: string };
+};
 
 interface SpotifyPlayer {
   connect: () => Promise<boolean>;
   disconnect: () => Promise<void>;
-  addListener: (event: string, callback: (state: PlayerState) => void) => void;
+  addListener: <T extends keyof SpotifyPlayerEventMap>(
+    event: T,
+    callback: (state: SpotifyPlayerEventMap[T]) => void
+  ) => void;
   removeListener: (event: string) => void;
   getCurrentState: () => Promise<PlayerState>;
   setName: (name: string) => Promise<void>;
@@ -158,10 +158,12 @@ export default function SpotifyPlayer({ songUri, onSongComplete }: SpotifyPlayer
               position: state.position,
               duration: state.duration,
               paused: state.paused,
-              track: {
-                name: state.track_window.current_track.name,
-                artist: state.track_window.current_track.artists[0].name,
-                uri: state.track_window.current_track.uri
+              track_window: {
+                current_track: {
+                  name: state.track_window.current_track.name,
+                  artists: state.track_window.current_track.artists,
+                  uri: state.track_window.current_track.uri
+                }
               }
             });
 
@@ -400,12 +402,12 @@ export default function SpotifyPlayer({ songUri, onSongComplete }: SpotifyPlayer
                 <h3 className={`text-lg font-semibold ${
                   isDarkMode ? 'text-white' : 'text-gray-900'
                 }`}>
-                  {playerState.track.name}
+                  {playerState.track_window.current_track.name}
                 </h3>
                 <p className={`text-sm ${
                   isDarkMode ? 'text-gray-300' : 'text-gray-600'
                 }`}>
-                  {playerState.track.artist}
+                  {playerState.track_window.current_track.artists[0].name}
                 </p>
               </div>
             )}

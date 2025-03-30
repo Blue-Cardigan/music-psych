@@ -3,56 +3,31 @@ import { cookies } from 'next/headers';
 
 export async function GET() {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const accessToken = cookieStore.get('spotify_access_token')?.value;
 
     if (!accessToken) {
       return NextResponse.json({ error: 'No access token found' }, { status: 401 });
     }
 
-    // Test search API
-    const searchResponse = await fetch(
-      'https://api.spotify.com/v1/search?q=track:Shape%20of%20You%20artist:Ed%20Sheeran&type=track&limit=1',
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-
-    if (!searchResponse.ok) {
-      const error = await searchResponse.json();
-      return NextResponse.json({ error: 'Search API failed', details: error }, { status: searchResponse.status });
-    }
-
-    const searchData = await searchResponse.json();
-    const trackId = searchData.tracks.items[0]?.id;
-
-    if (!trackId) {
-      return NextResponse.json({ error: 'No track found' }, { status: 404 });
-    }
-
-    // Test playback API
-    const playbackResponse = await fetch('https://api.spotify.com/v1/me/player/devices', {
+    // Test the access token by making a request to Spotify's API
+    const response = await fetch('https://api.spotify.com/v1/me', {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     });
 
-    if (!playbackResponse.ok) {
-      const error = await playbackResponse.json();
-      return NextResponse.json({ error: 'Playback API failed', details: error }, { status: playbackResponse.status });
+    if (!response.ok) {
+      return NextResponse.json({ error: 'Invalid access token' }, { status: 401 });
     }
 
-    const playbackData = await playbackResponse.json();
-
-    return NextResponse.json({
-      success: true,
-      search: searchData,
-      playback: playbackData,
-    });
+    const data = await response.json();
+    return NextResponse.json(data);
   } catch (error) {
-    console.error('Test endpoint error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('Test Spotify error:', error);
+    return NextResponse.json(
+      { error: 'Failed to test Spotify connection' },
+      { status: 500 }
+    );
   }
 } 
