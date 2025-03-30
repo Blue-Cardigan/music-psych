@@ -150,7 +150,7 @@ export default function SurveyForm({ songId }: SurveyFormProps) {
             id="comments"
             value={formData.comments}
             onChange={(e) => setFormData({ ...formData, comments: e.target.value })}
-            className="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            className="text-black p-1 mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
             rows={4}
             placeholder="Please describe any notable changes in your emotional or physical state..."
             required

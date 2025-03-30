@@ -8,8 +8,15 @@ import { isAuthenticated, isInitialRedirect } from '@/lib/auth';
 export default function Home() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+
     const checkAuth = async () => {
       // If we're in the initial redirect state, wait a bit for the cookie to be set
       if (isInitialRedirect()) {
@@ -24,13 +31,13 @@ export default function Home() {
     };
 
     checkAuth();
-  }, [router]);
+  }, [router, mounted]);
 
   const handleLogin = () => {
     redirectToAuthCodeFlow();
   };
 
-  if (isLoading) {
+  if (!mounted || isLoading) {
     return (
       <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-4xl mx-auto p-8">
