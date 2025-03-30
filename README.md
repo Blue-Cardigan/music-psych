@@ -1,13 +1,55 @@
-# Mood Music Recommender
+# Gaos  
 
-A Next.js application that recommends music based on your current mood and collects feedback on how the music affects your mood.
+**Gaos** is a music therapy platform. It fetches user’s liked tracks from Spotify, processes audio features via Essentia, and predicts mood/focus improvements based on user feedback.  It also leverages AI-driven interviews to build a naive digital twin of the user, allowing the system to discover new influential variables for personalization dynamically.
+---
 
-## Features
+## Repository Structure  
 
-- Mood-based music recommendations using vector similarity search
-- Spotify integration for music playback
-- Survey system to collect feedback on music's impact on mood
-- Modern, responsive UI with Tailwind CSS
+- **`web`** – **User Interface & Authentication**  
+  - Implements **Google OAuth** for login.  
+  - Connects to **Spotify API** to fetch Liked Songs.  
+  - UI for collecting **user feedback** on mood/focus after listening to songs.  
+
+- **`auralysis`** – **Audio Processing & Feature Extraction**  
+  - Runs **Essentia** to extract BPM, spectral features, loudness, etc.  
+  - Stores extracted features in a structured dataset.  
+
+- **`synapse`** – **Music Impact Modeling & Recommendation**  
+  - Merges **user feedback** (mood, ADHD tests) with extracted **audio features**.  
+  - Trains a model to **predict** how a song affects a user’s **focus & relaxation**.  
+  - Provides a **recommendation function** for optimal therapy tracks.  
+
+- **`psygraph`** – **AI Interview & Dynamic User Model**  
+  - Conducts an **AI-driven interview** to build a personalized psychological profile.  
+  - The AI learns to **simulate user responses**, allowing it to infer missing psychological variables over time.  
+  - Instead of asking the user every question, the system **queries the AI user model** to determine which factors are most relevant for personalization.  
+  - The refined model improves both the **accuracy of recommendations** and the **efficiency of data collection**.  
+
+---
+
+## Tasks  
+
+### 1. **User Authentication & Spotify Integration (`web`)**  
+- [ ] Implement **Google OAuth login**.  
+- [ ] Connect **Spotify API** to retrieve Liked Songs.  
+- [ ] Store minimal user data for session management.  
+- [ ] UI for collecting **user feedback** on song effects.  
+
+### 2. **Audio Processing (`auralysis`)**  
+- [ ] Extract **BPM, loudness, spectral descriptors, MFCCs** using **Essentia**.  
+- [ ] Store processed features in **CSV/DB**.  
+
+### 3. **Music Impact Modeling & Recommendation (`synapse`)**  
+- [ ] Merge **user feedback** (mood, ADHD test scores) with extracted **audio features**.  
+- [ ] Train a **regression/classification model** to predict music impact.  
+- [ ] Implement **recommendation logic** based on user profile & model output.  
+
+### 4. **AI-Driven Interview & Dynamic User Model (`psygraph`)**  
+- [ ] Design an **AI interview system** that asks relevant psychological & cognitive questions.  
+- [ ] Train an AI to **answer future questions like the user**, reducing the need for explicit input.  
+- [ ] Implement a feedback loop where the AI **adapts its user model over time**.  
+- [ ] Use this model to **dynamically identify missing variables** that could improve recommendations.  
+
 
 ## Prerequisites
 

@@ -113,21 +113,24 @@ export default function SpotifyPlayer({ songUri, onSongComplete }: SpotifyPlayer
       player.addListener('player_state_changed', (state: any) => {
         console.log('Player state changed:', state);
         if (state) {
-          setIsPlaying(!state.paused);
-          setPlayerState({
-            position: state.position,
-            duration: state.duration,
-            paused: state.paused,
-            track: {
-              name: state.track_window.current_track.name,
-              artist: state.track_window.current_track.artists[0].name,
-              uri: state.track_window.current_track.uri
-            }
-          });
+          // Only update display if the current track matches the selected song URI
+          if (state.track_window.current_track.uri === songUri) {
+            setIsPlaying(!state.paused);
+            setPlayerState({
+              position: state.position,
+              duration: state.duration,
+              paused: state.paused,
+              track: {
+                name: state.track_window.current_track.name,
+                artist: state.track_window.current_track.artists[0].name,
+                uri: state.track_window.current_track.uri
+              }
+            });
 
-          if (state.track_window.current_track.uri === songUri && state.paused) {
-            console.log('Song completed');
-            onSongComplete?.();
+            if (state.paused) {
+              console.log('Song completed');
+              onSongComplete?.();
+            }
           }
         }
       });
